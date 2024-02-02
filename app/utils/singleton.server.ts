@@ -31,25 +31,3 @@ class AuthUser {
 
 const singleton = Object.freeze(new AuthUser());
 export default singleton;
-
-// class StateUtility {
-//   constructor() {
-//     if (instance) {
-//       throw new Error("New instance cannot be created!!");
-//     }
-
-//     instance = this;
-//   }
-
-//   getPropertyByName(propertyName) {
-//     return globalState[propertyName];
-//   }
-
-//   setPropertyValue(propertyName, propertyValue) {
-//     globalState[propertyName] = propertyValue;
-//   }
-// }
-
-// const stateUtilityInstance = Object.freeze(new StateUtility());
-
-// export default stateUtilityInstance;

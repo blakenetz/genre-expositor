@@ -19,7 +19,7 @@ const headers = new Headers({
 async function handleResponse(response: Promise<Response>) {
   const resolved: SpotifyResponse = await Promise.resolve(response)
     .then((res) => res.json())
-    .catch((err) => console.error("Error", err));
+    .catch((err) => console.error("🪇 Error", err));
 
   // ruh roh
   if (!resolved) return false;
@@ -30,6 +30,7 @@ async function handleResponse(response: Promise<Response>) {
 }
 
 async function fetchToken() {
+  console.log("🪇 Fetching token");
   const init: RequestInit = {
     method: "POST",
     body: new URLSearchParams({ grant_type: "client_credentials" }),
@@ -42,6 +43,7 @@ async function fetchToken() {
 }
 
 async function refreshToken(token: string) {
+  console.log("🪇 Refreshing token");
   const init: RequestInit = {
     method: "POST",
     body: new URLSearchParams({
