@@ -1,7 +1,6 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { getUser } from "~/api/spotifyAuth";
+import { register } from "~/api/auth";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,12 +9,8 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export async function loader({
-  request,
-}: LoaderFunctionArgs) {
-  const user = await getUser(request);
-  console.log({ user })
-  return json({});
+export async function loader() {
+  return await register();
 }
 
 export default function Index() {

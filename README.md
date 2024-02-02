@@ -1,38 +1,12 @@
-# Welcome to Remix!
+# Genre Expositor
 
-- [Remix Docs](https://remix.run/docs)
+Using Spotify's API, determine what band/song/album's genre is
 
-## Development
+## Setup
 
-From your terminal:
+1. Follow Spotify's [getting started guide](https://developer.spotify.com/documentation/web-api/tutorials/getting-started)
+2. Update .env file with your credentials
 
-```sh
-npm run dev
+```text
+cp .env.sample .env
 ```
-
-This starts your app in development mode, rebuilding assets on file changes.
-
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
