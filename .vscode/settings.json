@@ -2,7 +2,7 @@
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "vscode.typescript-language-features",
 	"[typescriptreact]": {
-		"editor.defaultFormatter": "vscode.typescript-language-features"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescript]": {
 		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"

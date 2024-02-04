@@ -1,10 +1,11 @@
-import type { MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import { useLoaderData, useFetcher, json } from "@remix-run/react";
 import { register } from "~/api/auth";
 
-import { Container, Grid, SimpleGrid, Skeleton, rem } from '@mantine/core';
-
-const PRIMARY_COL_HEIGHT = rem(300);
+import { Button, Container, TextInput, Radio, Flex } from "@mantine/core";
+import { capitalize } from "~/utils/format";
+import { useInputState, useToggle } from "@mantine/hooks";
+import { SearchType, search, searchTypes, validate } from "~/api/spotify";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,30 +18,63 @@ export async function loader() {
   return await register();
 }
 
+export async function action({ request }: ActionFunctionArgs) {
+  console.log("inside action!");
+  const formData = await request.formData();
+  const validation = validate(formData);
+  if (validation.status === "invalid") {
+    return json({ ok: false });
+  }
+
+  const response = await search(validation.data);
+
+  console.log(response);
+
+  return json({ ok: true });
+}
+
 export default function Index() {
   // Get the data from the Loader function
-  const authTroubles = useLoaderData<typeof loader>();
-  console.log(authTroubles)
+  useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
 
-  const SECONDARY_COL_HEIGHT = `calc(${PRIMARY_COL_HEIGHT} / 2 - var(--mantine-spacing-md) / 2)`;
+  const isLoading = fetcher.state !== "idle";
 
+  const [query, setQuery] = useInputState("");
+  const [type, setType] = useToggle<SearchType>(["artist", "album", "track"]);
 
   return (
-    <Container my="md" component="main">
-      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-        <Skeleton height={PRIMARY_COL_HEIGHT} radius="md" animate={false} />
-        <Grid gutter="md">
-          <Grid.Col>
-            <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Skeleton height={SECONDARY_COL_HEIGHT} radius="md" animate={false} />
-          </Grid.Col>
-        </Grid>
-      </SimpleGrid>
+    <Container component="main" size="md">
+      <h1>Genre Expositor</h1>
+      <fetcher.Form method="post">
+        <Flex gap="lg">
+          <TextInput
+            label={`Query ${capitalize(type)}`}
+            variant="filled"
+            name="query"
+            value={query}
+            onChange={setQuery}
+          />
+
+          <Radio.Group
+            name="type"
+            label="Search by"
+            value={type}
+            onChange={(val) => setType(val as SearchType)}
+          >
+            {searchTypes.map((val) => (
+              <Radio value={val} label={capitalize(val)} key={val} />
+            ))}
+          </Radio.Group>
+        </Flex>
+        <Button
+          type="submit"
+          loading={isLoading}
+          loaderProps={{ type: "bars" }}
+        >
+          Submit
+        </Button>
+      </fetcher.Form>
     </Container>
   );
 }

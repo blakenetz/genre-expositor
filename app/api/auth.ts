@@ -75,3 +75,11 @@ export async function register(): Promise<boolean> {
 
   return await fetchToken();
 }
+
+export async function getToken(): Promise<string> {
+  const isValid = await validateToken();
+  if (!isValid) {
+    await fetchToken();
+  }
+  return singleton.user!.token;
+}
