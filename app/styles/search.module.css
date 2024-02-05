@@ -1,0 +1,18 @@
+.textInput {
+    flex: 66%;
+}
+
+.radioGroup [role="radiogroup"] {
+    gap: var(--mantine-spacing-xs);
+    display: grid;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mantine-spacing-lg)
+}
+
+.submitButton {
+    margin: var(--mantine-spacing-xl);
+}

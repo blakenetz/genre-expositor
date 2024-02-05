@@ -1,0 +1,6 @@
+#root {
+ background: linear-gradient(171deg, var(--mantine-color-red-1), var(--mantine-color-grape-1) 29%, var(--mantine-color-pink-1) 71%);
+ min-height: 100vh;
+ min-width: 100vw;
+ padding: var(--mantine-spacing-md);
+}

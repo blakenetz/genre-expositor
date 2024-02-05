@@ -7,6 +7,8 @@ import { capitalize } from "~/utils/format";
 import { useInputState, useToggle } from "@mantine/hooks";
 import { SearchType, search, searchTypes, validate } from "~/api/spotify";
 
+import styles from "~/styles/search.module.css";
+
 export const meta: MetaFunction = () => {
   return [
     { title: "Genre Expositor" },
@@ -46,9 +48,10 @@ export default function Index() {
   return (
     <Container component="main" size="md">
       <h1>Genre Expositor</h1>
-      <fetcher.Form method="post">
+      <fetcher.Form method="post" className={styles.form}>
         <Flex gap="lg">
           <TextInput
+            className={styles.textInput}
             label={`Query ${capitalize(type)}`}
             variant="filled"
             name="query"
@@ -57,6 +60,7 @@ export default function Index() {
           />
 
           <Radio.Group
+            className={styles.radioGroup}
             name="type"
             label="Search by"
             value={type}
@@ -70,7 +74,7 @@ export default function Index() {
         <Button
           type="submit"
           loading={isLoading}
-          loaderProps={{ type: "bars" }}
+          className={styles.submitButton}
         >
           Submit
         </Button>
