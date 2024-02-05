@@ -5,7 +5,13 @@ import { register } from "~/api/auth";
 import { Button, Container, TextInput, Radio, Flex } from "@mantine/core";
 import { capitalize } from "~/utils/format";
 import { useInputState, useToggle } from "@mantine/hooks";
-import { SearchType, search, searchTypes, validate } from "~/api/spotify";
+import {
+  Results,
+  SearchType,
+  search,
+  searchTypes,
+  validate,
+} from "~/api/spotify";
 
 import styles from "~/styles/search.module.css";
 
@@ -27,17 +33,15 @@ export async function action({ request }: ActionFunctionArgs) {
     return json({ error: true });
   }
 
-  const response = await search(validation.data);
+  const response: Results = await search(validation.data);
 
-  console.log(response);
-
-  return json({ status: true });
+  return json(response);
 }
 
 export default function Index() {
   // Get the data from the Loader function
   useLoaderData<typeof loader>();
-  const fetcher = useFetcher<{ error: boolean }>();
+  const fetcher = useFetcher<{ error: boolean } & Results>();
 
   const isLoading = fetcher.state !== "idle";
 
@@ -56,7 +60,7 @@ export default function Index() {
             name="query"
             value={query}
             onChange={setQuery}
-            error={query.length !== 0 && fetcher.data?.error}
+            error={query.length === 0 && fetcher.data?.error}
             placeholder={
               fetcher.data?.error ? "This is obviously required... dummy" : ""
             }

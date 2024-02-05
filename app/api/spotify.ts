@@ -30,8 +30,9 @@ type Item =
       genres: string[];
       image: { url: string; width: number; height: number };
     };
-type Results = {
-  status: "ok" | "no-results";
+
+export type Results = {
+  status?: "exact-match" | "partial-match" | "no-results" | "error";
   items: Item[];
 };
 
@@ -49,10 +50,10 @@ export function validate(formData: FormData): ValidateReturn {
   if (!query.length) return { status: "invalid" };
   if (!searchTypes.includes(type)) return { status: "invalid" };
 
-  return { status: "valid", data: { type, query } };
+  return { status: "valid", data: { type, query: query.toLowerCase().trim() } };
 }
 
-export async function search({ type, query }: Data) {
+export async function search({ type, query }: Data): Promise<Results> {
   const token = await getToken();
 
   const headers = new Headers({
@@ -62,15 +63,25 @@ export async function search({ type, query }: Data) {
 
   const init: RequestInit = {
     method: "GET",
-    body: new URLSearchParams({ q: query, type, market: "US" }),
     headers,
   };
 
-  const response = await fetch("https://api.spotify.com/v1/search", init);
+  const params = new URLSearchParams({ q: query, type, market: "US" });
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/search?${params}`,
+    init
+  );
+
+  if (response.status !== 200) {
+    console.log(response.statusText);
+    return { status: "error", items: [] };
+  }
+
   const data: SearchResults<["artist", "album", "track"]> =
     await response.json();
 
-  const results: Results = { status: "ok", items: [] };
+  const results: Results = { items: [] };
 
   switch (type) {
     case "album":
@@ -90,11 +101,24 @@ export async function search({ type, query }: Data) {
       if (!data.artists.items.length) {
         results.status = "no-results";
       } else {
-        results.items = data.artists.items.map((item) => ({
-          artist: item.name,
-          image: item.images[0],
-          genres: item.genres,
-        }));
+        const exactMatch = data.artists.items.find(
+          (item) => item.name.toLowerCase() === query
+        );
+
+        results.status = exactMatch ? "exact-match" : "partial-match";
+        results.items = exactMatch
+          ? [
+              {
+                artist: exactMatch.name,
+                image: exactMatch.images[0],
+                genres: exactMatch.genres,
+              },
+            ]
+          : data.artists.items.map((item) => ({
+              artist: item.name,
+              image: item.images[0],
+              genres: item.genres,
+            }));
       }
       break;
 
