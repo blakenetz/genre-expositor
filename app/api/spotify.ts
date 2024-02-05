@@ -4,13 +4,6 @@ import { SearchResults } from "@spotify/web-api-ts-sdk";
 export const searchTypes = ["artist", "album", "track"] as const;
 export type SearchType = (typeof searchTypes)[number];
 
-type Data = { type: SearchType; query: string };
-type ValidateReturn =
-  | {
-      status: "valid";
-      data: Data;
-    }
-  | { status: "invalid" };
 type Item =
   | {
       artist: string;
@@ -36,24 +29,50 @@ export type Results = {
   items: Item[];
 };
 
+type Data = { query: string; type: SearchType };
+
+type Error = {
+  type?: string;
+  query?: string;
+};
+
 const formatter = new Intl.ListFormat("en", {
   style: "long",
   type: "conjunction",
 });
 
-export function validate(formData: FormData): ValidateReturn {
-  const type = formData.get("type") as SearchType | null;
-  const query = formData.get("query") as string | null;
+function extract(formData: FormData) {
+  const type = formData.get("type") as SearchType;
+  const query = formData.get("query") as string;
 
-  if (typeof query !== "string" || typeof type !== "string")
-    return { status: "invalid" };
-  if (!query.length) return { status: "invalid" };
-  if (!searchTypes.includes(type)) return { status: "invalid" };
-
-  return { status: "valid", data: { type, query: query.toLowerCase().trim() } };
+  return { type, query };
 }
 
-export async function search({ type, query }: Data): Promise<Results> {
+function validate({ query, type }: Data): Error {
+  const errors: Error = {};
+
+  // validate query
+  if (typeof query !== "string") errors.query = `Invalid type: ${typeof query}`;
+  else if (!query?.length) errors.query = "Required";
+
+  // validate type
+  if (typeof type !== "string") errors.type = `Invalid type: ${typeof type}`;
+  else if (!searchTypes.includes(type)) errors.type = `Invalid option: ${type}`;
+
+  return errors;
+}
+
+export function validateAndExtract(formData: FormData) {
+  const data = extract(formData);
+  const errors = validate(data);
+
+  return {
+    errors,
+    data,
+  };
+}
+
+export async function search({ query, type }: Data): Promise<Results> {
   const token = await getToken();
 
   const headers = new Headers({
@@ -72,11 +91,6 @@ export async function search({ type, query }: Data): Promise<Results> {
     `https://api.spotify.com/v1/search?${params}`,
     init
   );
-
-  if (response.status !== 200) {
-    console.log(response.statusText);
-    return { status: "error", items: [] };
-  }
 
   const data: SearchResults<["artist", "album", "track"]> =
     await response.json();

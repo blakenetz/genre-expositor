@@ -10,7 +10,8 @@
 .form {
     display: flex;
     flex-direction: column;
-    gap: var(--mantine-spacing-lg)
+    gap: var(--mantine-spacing-lg);
+    padding: var(--mantine-spacing-md);
 }
 
 .submitButton {
