@@ -27,7 +27,7 @@ module.exports = {
     // React
     {
       files: ["**/*.{js,jsx,ts,tsx}"],
-      plugins: ["react", "jsx-a11y"],
+      plugins: ["react", "jsx-a11y", "unused-imports"],
       extends: [
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
@@ -80,4 +80,9 @@ module.exports = {
       },
     },
   ],
+
+  rules: {
+    "no-unused-vars": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn"],
+  },
 };

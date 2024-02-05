@@ -1,19 +1,19 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-// import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 
-import { search } from "~/api/spotify";
+import { search, validateAndExtract } from "~/api/spotify";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { searchParams } = new URL(request.url);
-  const query = searchParams.get("query");
-  const type = searchParams.get("type");
-  // const {}
-  // const data = await search({ query, type });
-  console.log(data);
+  const { data, errors } = validateAndExtract(searchParams);
+
+  const response = await search(data);
+  console.log(response);
+  return response;
 }
 
 export default function Results() {
-  // const data = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   return <p>hi</p>;
 }

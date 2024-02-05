@@ -1,3 +1,4 @@
+import { isObjectEmpty } from "~/utils";
 import { getToken } from "./auth";
 import { SearchResults } from "@spotify/web-api-ts-sdk";
 
@@ -41,14 +42,15 @@ const formatter = new Intl.ListFormat("en", {
   type: "conjunction",
 });
 
-function extract(formData: FormData) {
-  const type = formData.get("type") as SearchType;
-  const query = formData.get("query") as string;
+function extract(obj: FormData | URLSearchParams) {
+  const type = obj.get("type") as SearchType;
+  const query = obj.get("query") as string;
 
   return { type, query };
 }
 
-function validate({ query, type }: Data): Error {
+function validate({ query, type }: Data): Error | void {
+  
   const errors: Error = {};
 
   // validate query
@@ -59,11 +61,11 @@ function validate({ query, type }: Data): Error {
   if (typeof type !== "string") errors.type = `Invalid type: ${typeof type}`;
   else if (!searchTypes.includes(type)) errors.type = `Invalid option: ${type}`;
 
-  return errors;
+  if (!isObjectEmpty(errors)) return errors
 }
 
-export function validateAndExtract(formData: FormData) {
-  const data = extract(formData);
+export function validateAndExtract(obj: FormData | URLSearchParams) {
+  const data = extract(obj);
   const errors = validate(data);
 
   return {

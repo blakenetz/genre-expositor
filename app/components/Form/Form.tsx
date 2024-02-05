@@ -10,13 +10,15 @@ import {
 } from "@remix-run/react";
 import { SearchType, searchTypes, validateAndExtract } from "~/api/spotify";
 import styles from "./form.module.css";
-import { capitalize } from "~/utils/format";
+import { capitalize } from "~/utils";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
 
   const { errors, data } = validateAndExtract(formData);
   if (errors) return json({ errors });
+
+  console.log("redirecting");
 
   return redirect("/results?" + new URLSearchParams(data));
 }
