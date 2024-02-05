@@ -14,5 +14,6 @@
 }
 
 .submitButton {
-    margin: var(--mantine-spacing-xl);
+    align-self: center;
+    min-width: 50%
 }

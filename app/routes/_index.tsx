@@ -21,24 +21,23 @@ export async function loader() {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  console.log("inside action!");
   const formData = await request.formData();
   const validation = validate(formData);
   if (validation.status === "invalid") {
-    return json({ ok: false });
+    return json({ error: true });
   }
 
   const response = await search(validation.data);
 
   console.log(response);
 
-  return json({ ok: true });
+  return json({ status: true });
 }
 
 export default function Index() {
   // Get the data from the Loader function
   useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<{ error: boolean }>();
 
   const isLoading = fetcher.state !== "idle";
 
@@ -57,6 +56,10 @@ export default function Index() {
             name="query"
             value={query}
             onChange={setQuery}
+            error={query.length !== 0 && fetcher.data?.error}
+            placeholder={
+              fetcher.data?.error ? "This is obviously required... dummy" : ""
+            }
           />
 
           <Radio.Group
