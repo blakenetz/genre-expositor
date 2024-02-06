@@ -1,22 +1,16 @@
 import { Container } from "@mantine/core";
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { register } from "~/api/auth";
-import Form, { action as formAction } from "~/components/Form/Form";
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Genre Expositor" },
-    { name: "description", content: "Drill down into your spotify genres" },
-  ];
-};
+import { json, useLoaderData } from "@remix-run/react";
+import { register } from "~/api/auth.server";
+import Form, { action as formAction } from "~/components/Form";
 
 export async function action(args: ActionFunctionArgs) {
   return await formAction(args);
 }
 
 export async function loader() {
-  return await register();
+  await register();
+  return json({ ok: true });
 }
 
 export default function Index() {

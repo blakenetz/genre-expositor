@@ -1,5 +1,5 @@
 import { isObjectEmpty } from "~/utils";
-import { getToken } from "./auth";
+import { getToken } from "./auth.server";
 import { SearchResults } from "@spotify/web-api-ts-sdk";
 
 export const searchTypes = ["artist", "album", "track"] as const;

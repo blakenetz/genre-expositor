@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -18,6 +18,13 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   { rel: "stylesheet", href: styles },
 ];
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Genre Expositor" },
+    { name: "description", content: "Drill down into your spotify genres" },
+  ];
+};
 
 const theme = createTheme({
   primaryColor: "pink",
