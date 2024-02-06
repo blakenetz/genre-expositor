@@ -2,13 +2,16 @@ import { DonutChart, DonutChartCell } from "@mantine/charts";
 import "@mantine/charts/styles.css";
 import {
   Anchor,
-  Container,
   Badge,
+  Button,
+  Container,
   Paper,
   Title,
-  useMantineTheme,
-  Button,
+  UnstyledButton,
 } from "@mantine/core";
+import { useFetcher } from "@remix-run/react";
+import { IconVinyl } from "@tabler/icons-react";
+import { MouseEventHandler, useCallback } from "react";
 import { Artist, Item } from "~/api/spotify.server";
 import styles from "~/styles/artist.module.css";
 
@@ -28,7 +31,11 @@ function extractData(artist: Artist): DonutChartCell[] {
 
 export default function ExactMatch({ item }: { item: Item }) {
   const popularityData = extractData(item.artist);
-  const theme = useMantineTheme();
+  const fetcher = useFetcher();
+
+  const handleClick = useCallback<MouseEventHandler<HTMLButtonElement>>((e) => {
+    console.log(e.target, e.currentTarget.dataset);
+  }, []);
 
   return (
     <Container size="md">
@@ -39,45 +46,55 @@ export default function ExactMatch({ item }: { item: Item }) {
           className={styles.img}
         />
         <div className={styles.content}>
-          <div className={styles.flex}>
-            <Title order={2}>{item.artist.name}</Title>
-            <Anchor
-              href={item.artist.spotifyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Listen on Spotify
-            </Anchor>
-            {item.album && <h3>{item.album}</h3>}
-            {item.track && <h4>{item.track}</h4>}
-          </div>
+          <section className={styles.flex}>
+            <div>
+              <Title order={2} className={styles.h2}>
+                <IconVinyl /> {item.artist.name}
+              </Title>
+              <Anchor
+                href={item.artist.spotifyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Listen on Spotify
+              </Anchor>
+            </div>
 
-          <div className={styles.chart}>
-            <DonutChart
-              data={popularityData}
-              startAngle={180}
-              endAngle={0}
-              withTooltip={false}
-              size={100}
-            />
-            <h5>Popularity</h5>
-          </div>
+            <div className={styles.chart}>
+              <DonutChart
+                data={popularityData}
+                startAngle={180}
+                endAngle={0}
+                withTooltip={false}
+                size={50}
+                thickness={5}
+              />
+              <h5>Popularity</h5>
+            </div>
+          </section>
+          <section>
+            <Title order={3} className={styles.h3}>
+              Genres
+            </Title>
+            <div className={styles.genres}>
+              {item.genres.map((genre) => (
+                <Badge
+                  size="lg"
+                  key={genre}
+                  variant="gradient"
+                  gradient={{ from: "blue", to: "cyan", deg: 90 }}
+                  data-genre={genre}
+                  component="button"
+                  onClick={handleClick}
+                  className={styles.genre}
+                >
+                  {genre}
+                </Badge>
+              ))}
+            </div>
+          </section>
         </div>
       </Paper>
-      <section>
-        <h2>Genres</h2>
-        <div className={styles.genres}>
-          {item.genres.map((genre) => (
-            <Button
-              variant="gradient"
-              gradient={{ from: "blue", to: "cyan", deg: 90 }}
-              component={Badge}
-            >
-              {genre}
-            </Button>
-          ))}
-        </div>
-      </section>
     </Container>
   );
 }

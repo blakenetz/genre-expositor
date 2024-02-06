@@ -1,9 +1,7 @@
 import { isObjectEmpty } from "~/utils";
 import { getToken } from "./auth.server";
 import { SearchResults } from "@spotify/web-api-ts-sdk";
-
-export const searchTypes = ["artist", "album", "track"] as const;
-export type SearchType = (typeof searchTypes)[number];
+import { SearchType, searchTypes } from "./spotify";
 
 export type Artist = { name: string; spotifyUrl: string; popularity: number };
 
@@ -103,7 +101,7 @@ export async function search({ query, type }: Data): Promise<Results> {
       break;
 
     case "artist":
-      if (!(data.artists.items ?? []).length) {
+      if (!(data.artists?.items ?? []).length) {
         results.status = "no-results";
       } else {
         const exactMatch = data.artists.items.find(

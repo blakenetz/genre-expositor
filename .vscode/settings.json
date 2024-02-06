@@ -8,7 +8,8 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"cSpell.words": [
-		"Mantine"
+		"Mantine",
+		"tabler"
 	],
 	"[css]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"

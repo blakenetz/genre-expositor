@@ -8,11 +8,8 @@ import {
   useActionData,
   useNavigation,
 } from "@remix-run/react";
-import {
-  SearchType,
-  searchTypes,
-  validateAndExtract,
-} from "~/api/spotify.server";
+import { SearchType, searchTypes } from "~/api/spotify";
+import { validateAndExtract } from "~/api/spotify.server";
 import styles from "~/styles/form.module.css";
 import { capitalize } from "~/utils";
 
