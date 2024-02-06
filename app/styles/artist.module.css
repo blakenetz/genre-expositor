@@ -30,3 +30,9 @@
   justify-content: space-between;
   flex-direction: column;
 }
+
+.genres {
+  display: flex;
+  justify-content: center;
+  gap: var(--mantine-spacing-md);
+}

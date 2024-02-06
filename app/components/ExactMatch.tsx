@@ -1,13 +1,13 @@
 import { DonutChart, DonutChartCell } from "@mantine/charts";
-
 import "@mantine/charts/styles.css";
 import {
   Anchor,
   Container,
-  Flex,
+  Badge,
   Paper,
   Title,
   useMantineTheme,
+  Button,
 } from "@mantine/core";
 import { Artist, Item } from "~/api/spotify.server";
 import styles from "~/styles/artist.module.css";
@@ -66,7 +66,17 @@ export default function ExactMatch({ item }: { item: Item }) {
       </Paper>
       <section>
         <h2>Genres</h2>
-        <div></div>
+        <div className={styles.genres}>
+          {item.genres.map((genre) => (
+            <Button
+              variant="gradient"
+              gradient={{ from: "blue", to: "cyan", deg: 90 }}
+              component={Badge}
+            >
+              {genre}
+            </Button>
+          ))}
+        </div>
       </section>
     </Container>
   );
