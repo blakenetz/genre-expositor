@@ -5,25 +5,15 @@ import { SearchResults } from "@spotify/web-api-ts-sdk";
 export const searchTypes = ["artist", "album", "track"] as const;
 export type SearchType = (typeof searchTypes)[number];
 
-type Item =
-  | {
-      artist: string;
-      genres: string[];
-      image: { url: string; width: number; height: number };
-    }
-  | {
-      album: string;
-      artist: string;
-      genres: string[];
-      image: { url: string; width: number; height: number };
-    }
-  | {
-      track: string;
-      album: string;
-      artist: string;
-      genres: string[];
-      image: { url: string; width: number; height: number };
-    };
+export type Artist = { name: string; spotifyUrl: string; popularity: number };
+
+export type Item = {
+  artist: Artist;
+  genres: string[];
+  image: { url: string; width: number; height: number };
+  album?: string;
+  track?: string;
+};
 
 export type Results = {
   status?: "exact-match" | "partial-match" | "no-results" | "error";
@@ -50,7 +40,6 @@ function extract(obj: FormData | URLSearchParams) {
 }
 
 function validate({ query, type }: Data): Error | void {
-  
   const errors: Error = {};
 
   // validate query
@@ -61,7 +50,7 @@ function validate({ query, type }: Data): Error | void {
   if (typeof type !== "string") errors.type = `Invalid type: ${typeof type}`;
   else if (!searchTypes.includes(type)) errors.type = `Invalid option: ${type}`;
 
-  if (!isObjectEmpty(errors)) return errors
+  if (!isObjectEmpty(errors)) return errors;
 }
 
 export function validateAndExtract(obj: FormData | URLSearchParams) {
@@ -101,20 +90,20 @@ export async function search({ query, type }: Data): Promise<Results> {
 
   switch (type) {
     case "album":
-      if (!data.albums.items.length) {
-        results.status = "no-results";
-      } else {
-        results.items = data.albums.items.map((item) => ({
-          album: item.name,
-          artist: formatter.format(item.artists.map((a) => a.name)),
-          image: item.images[0],
-          genres: item.genres,
-        }));
-      }
+      // if (!data.albums.items.length) {
+      //   results.status = "no-results";
+      // } else {
+      //   results.items = data.albums.items.map((item) => ({
+      //     album: item.name,
+      //     artist: formatter.format(item.artists.map((a) => a.name)),
+      //     image: item.images[0],
+      //     genres: item.genres,
+      //   }));
+      // }
       break;
 
     case "artist":
-      if (!data.artists.items.length) {
+      if (!(data.artists.items ?? []).length) {
         results.status = "no-results";
       } else {
         const exactMatch = data.artists.items.find(
@@ -125,13 +114,21 @@ export async function search({ query, type }: Data): Promise<Results> {
         results.items = exactMatch
           ? [
               {
-                artist: exactMatch.name,
+                artist: {
+                  name: exactMatch.name,
+                  spotifyUrl: exactMatch.external_urls.spotify,
+                  popularity: exactMatch.popularity,
+                },
                 image: exactMatch.images[0],
                 genres: exactMatch.genres,
               },
             ]
           : data.artists.items.map((item) => ({
-              artist: item.name,
+              artist: {
+                name: item.name,
+                spotifyUrl: item.external_urls.spotify,
+                popularity: item.popularity,
+              },
               image: item.images[0],
               genres: item.genres,
             }));

@@ -1,0 +1,32 @@
+:root {
+  --chart-size: 100px;
+}
+
+.root {
+  display: flex;
+}
+
+.img {
+  height: 200px;
+}
+
+.chart {
+  position: relative;
+  width: var(--chart-size);
+  height: calc(var(--chart-size) * 0.75);
+}
+
+.chart h5 {
+  position: absolute;
+  top: calc(calc(var(--chart-size) / 2));
+  margin: calc(var(--mantine-spacing-xs) / 2) 0;
+  width: 100%;
+  text-align: center;
+}
+
+.content {
+  padding: var(--mantine-spacing-md);
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}

@@ -5,9 +5,12 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"cSpell.words": [
 		"Mantine"
-	]
+	],
+	"[css]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }
