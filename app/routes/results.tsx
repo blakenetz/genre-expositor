@@ -5,7 +5,7 @@ import {
   search,
   validateAndExtract,
   Results as ResultData,
-} from "~/api/spotify.server";
+} from "~/api/search.server";
 import ExactMatch from "~/components/ExactMatch";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -13,7 +13,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { data, errors } = validateAndExtract(searchParams);
 
   const response = await search(data);
-  console.log(response);
   return response;
 }
 

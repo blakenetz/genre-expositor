@@ -1,4 +1,4 @@
-import { isObjectEmpty } from "~/utils";
+import { isObjectEmpty, validateOption, validateString } from "~/utils";
 import { getToken } from "./auth.server";
 import { SearchResults } from "@spotify/web-api-ts-sdk";
 import { SearchType, searchTypes } from "./spotify";
@@ -40,13 +40,11 @@ function extract(obj: FormData | URLSearchParams) {
 function validate({ query, type }: Data): Error | void {
   const errors: Error = {};
 
-  // validate query
-  if (typeof query !== "string") errors.query = `Invalid type: ${typeof query}`;
-  else if (!query?.length) errors.query = "Required";
+  const queryError = validateString(query);
+  if (queryError) errors.query = queryError;
 
-  // validate type
-  if (typeof type !== "string") errors.type = `Invalid type: ${typeof type}`;
-  else if (!searchTypes.includes(type)) errors.type = `Invalid option: ${type}`;
+  const typeError = validateOption<SearchType>(type, searchTypes);
+  if (typeError) errors.type = typeError;
 
   if (!isObjectEmpty(errors)) return errors;
 }

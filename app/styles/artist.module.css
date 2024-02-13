@@ -31,7 +31,7 @@
 .genres {
   display: flex;
   justify-content: center;
-  gap: var(--mantine-spacing-md);
+  gap: var(--mantine-spacing-sm);
 }
 
 .genre:hover {

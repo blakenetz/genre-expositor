@@ -1,18 +1,11 @@
 import { DonutChart, DonutChartCell } from "@mantine/charts";
 import "@mantine/charts/styles.css";
-import {
-  Anchor,
-  Badge,
-  Button,
-  Container,
-  Paper,
-  Title,
-  UnstyledButton,
-} from "@mantine/core";
+import { Anchor, Badge, Container, Paper, Title } from "@mantine/core";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { IconVinyl } from "@tabler/icons-react";
 import { MouseEventHandler, useCallback } from "react";
-import { Artist, Item } from "~/api/spotify.server";
+import { Artist, Item } from "~/api/search.server";
 import styles from "~/styles/artist.module.css";
 
 function extractData(artist: Artist): DonutChartCell[] {
@@ -29,13 +22,23 @@ function extractData(artist: Artist): DonutChartCell[] {
   ];
 }
 
+export async function action({ params }: ActionFunctionArgs) {
+  console.log(params);
+}
+
 export default function ExactMatch({ item }: { item: Item }) {
   const popularityData = extractData(item.artist);
   const fetcher = useFetcher();
 
   const handleClick = useCallback<MouseEventHandler<HTMLButtonElement>>((e) => {
-    console.log(e.target, e.currentTarget.dataset);
+    const { genre } = e.currentTarget.dataset;
+    if (genre) {
+      const search = new URLSearchParams({ genre }).toString();
+      fetcher.load(`/recommendation?${search}`);
+    }
   }, []);
+
+  console.log(fetcher.data);
 
   return (
     <Container size="md">

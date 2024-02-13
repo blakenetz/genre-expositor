@@ -9,7 +9,7 @@ import {
   useNavigation,
 } from "@remix-run/react";
 import { SearchType, searchTypes } from "~/api/spotify";
-import { validateAndExtract } from "~/api/spotify.server";
+import { validateAndExtract } from "~/api/search.server";
 import styles from "~/styles/form.module.css";
 import { capitalize } from "~/utils";
 
