@@ -19,8 +19,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const { errors, data } = validateAndExtract(formData);
   if (errors) return json({ errors });
 
-  console.log("redirecting");
-
   return redirect("/results?" + new URLSearchParams(data));
 }
 

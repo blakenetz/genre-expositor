@@ -22,10 +22,6 @@ function extractData(artist: Artist): DonutChartCell[] {
   ];
 }
 
-export async function action({ params }: ActionFunctionArgs) {
-  console.log(params);
-}
-
 export default function ExactMatch({ item }: { item: Item }) {
   const popularityData = extractData(item.artist);
   const fetcher = useFetcher();
@@ -37,8 +33,6 @@ export default function ExactMatch({ item }: { item: Item }) {
       fetcher.load(`/recommendation?${search}`);
     }
   }, []);
-
-  console.log(fetcher.data);
 
   return (
     <Container size="md">

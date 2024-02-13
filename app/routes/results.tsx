@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import {
@@ -12,12 +12,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { searchParams } = new URL(request.url);
   const { data, errors } = validateAndExtract(searchParams);
 
+  if (errors) {
+    console.error("🪇 Errors: ", errors);
+    redirect("/");
+  }
+
   const response = await search(data);
   return response;
 }
 
 export default function Results() {
-  const data: ResultData = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   switch (data.status) {
     case "exact-match":
