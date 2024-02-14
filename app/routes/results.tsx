@@ -29,5 +29,17 @@ export default function Results() {
       return <ExactMatch item={data.items[0]} />;
   }
 
-  return <p>hi</p>;
+  return (
+    <p>
+      Sorry! This app only supports exact matches at the moment. Please try
+      again or{" "}
+      <a
+        href="https://github.com/blakenetz/genre-expositor/pulls"
+        target="_blank"
+        ref="noopener noreferrer"
+      >
+        submit a PR!
+      </a>
+    </p>
+  );
 }

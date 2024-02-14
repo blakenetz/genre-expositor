@@ -57,7 +57,12 @@ export default function Form() {
           onChange={(val) => setType(val as SearchType)}
         >
           {searchTypes.map((val) => (
-            <Radio value={val} label={capitalize(val)} key={val} />
+            <Radio
+              value={val}
+              label={capitalize(val)}
+              key={val}
+              disabled={val === "album" || val === "track"}
+            />
           ))}
         </Radio.Group>
       </Flex>
