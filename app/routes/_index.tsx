@@ -1,5 +1,5 @@
 import { Container } from "@mantine/core";
-import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, useLoaderData } from "@remix-run/react";
 import { register } from "~/api/auth.server";
 import Form, { action as formAction } from "~/components/Form";

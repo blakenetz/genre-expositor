@@ -1,7 +1,6 @@
 import { DonutChart, DonutChartCell } from "@mantine/charts";
 import "@mantine/charts/styles.css";
 import { Anchor, Badge, Container, Paper, Title } from "@mantine/core";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { IconVinyl } from "@tabler/icons-react";
 import { MouseEventHandler, useCallback } from "react";

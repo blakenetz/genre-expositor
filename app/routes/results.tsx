@@ -36,7 +36,7 @@ export default function Results() {
       <a
         href="https://github.com/blakenetz/genre-expositor/pulls"
         target="_blank"
-        ref="noopener noreferrer"
+        rel="noopener noreferrer"
       >
         submit a PR!
       </a>

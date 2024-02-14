@@ -1,7 +1,4 @@
-import {
-  RecommendationSeed,
-  RecommendationsResponse,
-} from "@spotify/web-api-ts-sdk";
+import { RecommendationsResponse } from "@spotify/web-api-ts-sdk";
 import { getToken } from "./auth.server";
 import { isObjectEmpty, validateString } from "~/utils";
 

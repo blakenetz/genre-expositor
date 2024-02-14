@@ -25,7 +25,7 @@ type Error = {
   query?: string;
 };
 
-const formatter = new Intl.ListFormat("en", {
+const _formatter = new Intl.ListFormat("en", {
   style: "long",
   type: "conjunction",
 });
